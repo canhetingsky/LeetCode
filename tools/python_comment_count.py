@@ -63,7 +63,7 @@ def readFilePath(path, debug=True):
 def main():
     config = {
         'path': './',  # 要统计的文件夹
-        'debug': False,  # 是否显示每一个文件的统计信息
+        'debug': True,  # 是否显示每一个文件的统计信息
         'percent': 20  # 代码注释率最小有效值（针对整个文件夹）
     }
     file_path = config.get('path')
