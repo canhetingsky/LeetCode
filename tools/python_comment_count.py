@@ -10,8 +10,8 @@ def readFilePath(path, debug=True):
 
     for file in files:
         # 获取.py文件
-        if(os.path.isfile(path + '\\' + file) and (file[file.rfind('.'):] == '.py')):
-            ff = open(path + '\\' + file, encoding='utf-8')
+        if(os.path.isfile(path + '/' + file) and (file[file.rfind('.'):] == '.py')):
+            ff = open(path + '/' + file, encoding='utf-8')
             codeCount = commentCount = spaceCount = 0
             flag = False  # 块注释标识
             first = True
@@ -47,12 +47,12 @@ def readFilePath(path, debug=True):
             totalCommentCount += commentCount
             totalSpaceCount += spaceCount
 
-        if(os.path.isdir(path + '\\' + file)):  # 文件夹则递归查找
+        if(os.path.isdir(path + '/' + file)):  # 文件夹则递归查找
             if(file[0] == '.'):
                 pass
             else:
                 codeCount, commentCount, spaceCount = readFilePath(
-                    path + '\\' + file, debug=debug)
+                    path + '/' + file, debug=debug)
                 totalCodeCount += codeCount
                 totalCommentCount += commentCount
                 totalSpaceCount += spaceCount
