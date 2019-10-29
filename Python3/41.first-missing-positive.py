@@ -14,11 +14,13 @@ class Solution:
         for num in nums:
             if num == res:
                 res += 1
+            elif num > res:
+                break
 
         return res
 # @lc code=end
 
 # Accepted
-# 165/165 cases passed(44 ms)
-# Your runtime beats 61.68 % of python3 submissions
-# Your memory usage beats 8.7 % of python3 submissions(14 MB)
+# 165/165 cases passed(40 ms)
+# Your runtime beats 86.9 % of python3 submissions
+# Your memory usage beats 8.7 % of python3 submissions(13.7 MB)
