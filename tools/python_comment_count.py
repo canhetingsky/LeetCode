@@ -78,8 +78,8 @@ def main():
         print(info)
         print('*' * len(info))
         if percent < config.get('percent'):
-            raise Exception('code comments less than %s' %
-                            (config.get('percent')))
+            print('code comments less than %s' %
+                  (config.get('percent')))
     else:
         print('%s not found' % file_path)
 
