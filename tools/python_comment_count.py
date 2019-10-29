@@ -39,7 +39,7 @@ def readFilePath(path, debug=True):
 
             if debug:
                 percent = round(commentCount*100/codeCount, 2)
-                info = '文件：{0}    注释行数/有效行数：{1}/{2}    空行数：{3}    代码注释率：{4}%'.format(
+                info = '文件：{0:50s}    注释行数/有效行数：{1:4d}/{2:<4d}    空行数：{3:<4d}    代码注释率：{4:.2f}%'.format(
                     file, commentCount, codeCount, spaceCount, percent)
                 print(info)
 
@@ -72,14 +72,14 @@ def main():
         totalCodeCount, totalCommentCount, totalSpaceCount = readFilePath(
             file_path, debug=config.get('debug'))
         percent = round(totalCommentCount*100/totalCodeCount, 2)
-        info = '文件夹：{0}    注释行数/有效行数：{1}/{2}    空行数：{3}    代码注释率：{4}%'.format(
+        info = '文件夹：{0:48s}    注释行数/有效行数：{1:4d}/{2:<4d}    空行数：{3:4d}    代码注释率：{4:.2f}%'.format(
             file_path, totalCommentCount, totalCodeCount, totalSpaceCount, percent)
         print('*'*len(info))
         print(info)
         print('*' * len(info))
         if percent < config.get('percent'):
-            print('code comments less than %s' %
-                  (config.get('percent')))
+            err = 'code comments less than %s' % (config.get('percent'))
+            raise Exception(err)
     else:
         print('%s not found' % file_path)
 
