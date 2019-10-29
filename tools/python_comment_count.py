@@ -11,7 +11,7 @@ def readFilePath(path, debug=True):
     for file in files:
         # 获取.py文件
         if(os.path.isfile(path + '\\' + file) and (file[file.rfind('.'):] == '.py')):
-            ff = open(path + '\\' + file)
+            ff = open(path + '\\' + file, encoding='utf-8')
             codeCount = commentCount = spaceCount = 0
             flag = False  # 块注释标识
             first = True
@@ -62,12 +62,13 @@ def readFilePath(path, debug=True):
 
 def main():
     config = {
-        'path': '../Python3',  # 要统计的文件夹
-        'debug': False,  # 是否显示每一个文件的统计信息
+        'path': './',  # 要统计的文件夹
+        'debug': True,  # 是否显示每一个文件的统计信息
         'percent': 20  # 代码注释率最小有效值（针对整个文件夹）
     }
     file_path = config.get('path')
     if os.path.isdir(file_path):
+        print('正在处理：%s' % file_path)
         totalCodeCount, totalCommentCount, totalSpaceCount = readFilePath(
             file_path, debug=config.get('debug'))
         percent = round(totalCommentCount*100/totalCodeCount, 2)
@@ -77,8 +78,10 @@ def main():
         print(info)
         print('*' * len(info))
         if percent < config.get('percent'):
-            raise Exception('code comments less than %s' %
-                            (config.get('percent')))
+            print('code comments less than %s' %
+                  (config.get('percent')))
+    else:
+        print('%s not found' % file_path)
 
 
 if __name__ == "__main__":
