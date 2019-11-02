@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 # encoding: utf-8
 import os
+import argparse
 
 
-def readFilePath(path, debug=True):
+def readFilePath(path, debug=True, percent=20):
     # 代码总行数(不包含空行)、注释行数、空行数
     totalCodeCount, totalCommentCount, totalSpaceCount = 0, 0, 0
     files = os.listdir(path)  # 打开指定路径下所有文件及文件夹
@@ -38,9 +39,9 @@ def readFilePath(path, debug=True):
                         commentCount = end_line - start_line + 1
 
             if debug:
-                percent = round(commentCount*100/codeCount, 2)
-                info = '文件：{0:50s}    注释行数/有效行数：{1:4d}/{2:<4d}    空行数：{3:<4d}    代码注释率：{4:.2f}%'.format(
-                    file, commentCount, codeCount, spaceCount, percent)
+                info, passed = showInfo(
+                    'file', file, commentCount, codeCount, spaceCount, min_percent=percent)
+                passed = passed
                 print(info)
 
             totalCodeCount += codeCount
@@ -60,29 +61,58 @@ def readFilePath(path, debug=True):
     return totalCodeCount, totalCommentCount, totalSpaceCount
 
 
-def main():
+def showInfo(type, path, commentCount, codeCount, spaceCount, min_percent=20):
+    if codeCount == 0:
+        percent = 0
+    else:
+        percent = round(commentCount*100/codeCount, 2)
+
+    if len(path) > 30:
+        path = path[:27]+'...'
+    info = '{0}: {1:30s}    comment/code:{2:4d}/{3:<4d}    space:{4:<4d}    percent:{5:.2f}%'.format(
+        type, path, commentCount, codeCount, spaceCount, percent)
+    if percent >= min_percent:
+        info = '[√] ' + info
+        passed = True
+    else:
+        info = '[×] ' + info
+        passed = False
+    return info, passed
+
+
+def main(args):
     config = {
-        'path': './',  # 要统计的文件夹
-        'debug': True,  # 是否显示每一个文件的统计信息
-        'percent': 20  # 代码注释率最小有效值（针对整个文件夹）
+        'path': args.path,  # 要统计的文件夹
+        'debug': args.debug,  # 是否显示每一个文件的统计信息
+        'percent': args.percent  # 代码注释率最小有效值（针对整个文件夹）
     }
-    file_path = config.get('path')
-    if os.path.isdir(file_path):
-        print('正在处理：%s' % file_path)
+    print(config)
+    dict_path = config.get('path')
+    if os.path.isdir(dict_path):
+        print('dealing with:%s' % dict_path)
         totalCodeCount, totalCommentCount, totalSpaceCount = readFilePath(
-            file_path, debug=config.get('debug'))
-        percent = round(totalCommentCount*100/totalCodeCount, 2)
-        info = '文件夹：{0:48s}    注释行数/有效行数：{1:4d}/{2:<4d}    空行数：{3:4d}    代码注释率：{4:.2f}%'.format(
-            file_path, totalCommentCount, totalCodeCount, totalSpaceCount, percent)
-        print('*'*len(info))
+            dict_path, debug=config.get('debug'), percent=config.get('percent'))
+        min_percent = config.get('percent')
+        info, passed = showInfo('dict', dict_path, totalCommentCount,
+                                totalCodeCount, totalSpaceCount, min_percent=min_percent)
+        print('*' * len(info))
         print(info)
         print('*' * len(info))
-        if percent < config.get('percent'):
-            err = 'code comments less than %s' % (config.get('percent'))
+        if not passed:
+            err = 'code comments less than {0}%'.format(min_percent)
             raise Exception(err)
     else:
-        print('%s not found' % file_path)
+        print('%s not found' % dict_path)
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(
+        usage="it's usage tip.", description="help info.")
+    parser.add_argument("--path", default='./',
+                        help="the folder to process.", dest="path")
+    parser.add_argument("--debug", choices=[True, False], type=bool,
+                        default=False, help="whether to show each file.", dest="debug")
+    parser.add_argument("--percent", type=int, default=20,
+                        help="minimum code coverage")
+    args = parser.parse_args()
+    main(args)
