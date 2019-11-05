@@ -3,6 +3,11 @@
 
 
 def file_create(file_name, txt):
+    """
+    write txt to a file
+    :param file_name:the name of file
+    :param txt:中午收盘价
+    """
     with open(file_name, mode='w', encoding='utf-8') as f:
         f.write(txt)
 
@@ -25,7 +30,7 @@ def main():
                 print(file_name)
             txt += s
 
-    file_create(file_name + '.md', txt)
+    file_create(file_name + '.md', txt)  # the last one
 
 
 if __name__ == "__main__":
