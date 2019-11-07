@@ -4,56 +4,63 @@ import os
 import argparse
 
 
-def readFilePath(path, debug=True, percent=20):
+def readFile(file_path, debug=True, percent=20):
+    ff = open(file_path, encoding='utf-8')
+    codeCount = commentCount = spaceCount = 0
+    flag = False  # 块注释标识
+    first = True
+
+    for line in ff.readlines():  # 逐行读取.py文件
+        sLine = line.strip()
+        if len(sLine) == 0:
+            spaceCount += 1
+            continue
+        else:
+            codeCount += 1
+
+        if sLine.find('#') >= 0:
+            commentCount = commentCount + 1
+        elif sLine.find("'''") >= 0 or sLine.find('"""') >= 0:  # 块注释
+            flag = bool(1 - flag)
+
+        if flag:
+            start_line = codeCount
+            first = False
+        else:
+            if not first:
+                end_line = codeCount
+                commentCount = end_line - start_line + 1
+
+    if debug:
+        info, passed = showInfo(
+            'file', os.path.basename(file_path), commentCount, codeCount, spaceCount, min_percent=percent)
+        passed = passed
+        print(info)
+    return codeCount, commentCount, spaceCount
+
+
+def readPath(path, debug=True, percent=20):
     # 代码总行数(不包含空行)、注释行数、空行数
     totalCodeCount, totalCommentCount, totalSpaceCount = 0, 0, 0
     files = os.listdir(path)  # 打开指定路径下所有文件及文件夹
 
     for file in files:
         # 获取.py文件
-        if(os.path.isfile(path + '/' + file) and (file[file.rfind('.'):] == '.py')):
-            ff = open(path + '/' + file, encoding='utf-8')
-            codeCount = commentCount = spaceCount = 0
-            flag = False  # 块注释标识
-            first = True
-
-            for line in ff.readlines():  # 逐行读取.py文件
-                sLine = line.strip()
-                if len(sLine) == 0:
-                    spaceCount += 1
-                    continue
-                else:
-                    codeCount += 1
-
-                if sLine.find('#') >= 0:
-                    commentCount = commentCount + 1
-                elif sLine.find("'''") >= 0 or sLine.find('"""') >= 0:  # 块注释
-                    flag = bool(1 - flag)
-
-                if flag:
-                    start_line = codeCount
-                    first = False
-                else:
-                    if not first:
-                        end_line = codeCount
-                        commentCount = end_line - start_line + 1
-
-            if debug:
-                info, passed = showInfo(
-                    'file', file, commentCount, codeCount, spaceCount, min_percent=percent)
-                passed = passed
-                print(info)
+        sub_path = path + '/' + file
+        if (os.path.isfile(sub_path) and (file[file.rfind('.'):] == '.py')):
+            codeCount, commentCount, spaceCount = readFile(
+                sub_path, debug=debug, percent=percent)
 
             totalCodeCount += codeCount
             totalCommentCount += commentCount
             totalSpaceCount += spaceCount
 
-        if(os.path.isdir(path + '/' + file)):  # 文件夹则递归查找
-            if(file[0] == '.'):
+        if(os.path.isdir(sub_path)):  # 文件夹则递归查找
+            if(file[0] == '.'):  # 隐藏文件夹
                 pass
             else:
-                codeCount, commentCount, spaceCount = readFilePath(
-                    path + '/' + file, debug=debug)
+                codeCount, commentCount, spaceCount = readPath(
+                    sub_path, debug=debug, percent=percent)
                 totalCodeCount += codeCount
                 totalCommentCount += commentCount
                 totalSpaceCount += spaceCount
@@ -90,7 +97,7 @@ def main(args):
     dict_path = config.get('path')
     if os.path.isdir(dict_path):
         print('dealing with:%s' % dict_path)
-        totalCodeCount, totalCommentCount, totalSpaceCount = readFilePath(
+        totalCodeCount, totalCommentCount, totalSpaceCount = readPath(
             dict_path, debug=config.get('debug'), percent=config.get('percent'))
         min_percent = config.get('percent')
         info, passed = showInfo('dict', dict_path, totalCommentCount,
