@@ -11,6 +11,10 @@ def main():
             'name': 'hooks: pre_commit',
             'src': './tools/pre-commit',
             'dst': './.git/hooks/pre-commit'
+        }, {
+            'name': 'hooks: post-commit',
+            'src': './tools/post-commit',
+            'dst': './.git/hooks/post-commit'
         }
     ]
 
