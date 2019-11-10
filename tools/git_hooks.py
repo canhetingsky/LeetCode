@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # encoding: utf-8
+import filecmp
 import os
 import shutil
 
@@ -17,7 +18,8 @@ def main():
         name = hook.get('name')
         src = hook.get('src')
         dst = hook.get('dst')
-        if os.path.isfile(dst):
+        # exist already and two files are the same
+        if os.path.isfile(dst) and filecmp.cmp(src, dst):
             print('%s already exists' % name)
         else:
             shutil.copy(src, dst)
