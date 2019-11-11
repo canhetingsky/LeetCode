@@ -5,7 +5,6 @@
 #
 
 # @lc code=start
-from typing import List
 
 
 class Solution:
@@ -23,7 +22,6 @@ class Solution:
             nums[i] = 1
         for i in range(count[0]+count[1], len(nums)):
             nums[i] = 2
-        # print(nums)
 
     # Solution 1
     # def sortColors(self, nums: List[int]) -> None:
