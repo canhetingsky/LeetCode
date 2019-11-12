@@ -3,22 +3,22 @@
 import filecmp
 import os
 import shutil
+import yaml
+
+
+def yamlToDic(file_path):
+    dic = {}
+    with open(file_path, 'r', encoding='utf-8') as f:
+        dic = yaml.safe_load(f)
+
+    return dic
 
 
 def main():
-    hooks = [
-        {
-            'name': 'hooks: pre_commit',
-            'src': './tools/pre-commit',
-            'dst': './.git/hooks/pre-commit'
-        }, {
-            'name': 'hooks: post-commit',
-            'src': './tools/post-commit',
-            'dst': './.git/hooks/post-commit'
-        }
-    ]
+    file_path = './tools/githooks_config.yml'
+    config = yamlToDic(file_path)
 
-    for hook in hooks:
+    for hook in config.get('hooks'):
         name = hook.get('name')
         src = hook.get('src')
         dst = hook.get('dst')
