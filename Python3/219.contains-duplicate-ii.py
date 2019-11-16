@@ -10,15 +10,16 @@ from typing import List
 
 class Solution:
     def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
-        for i in range(len(nums)):
-            for j in range(k):
-                if i + j + 1 >= len(nums):
-                    break
-                if nums[i + j + 1] == nums[i]:
-                    return True
+        dic = {}
+        for index, val in enumerate(nums):
+            if val in dic and index - dic[val] <= k:
+                return True
+            dic[val] = index
 
         return False
 # @lc code=end
 
-# Time Limit Exceeded
-# 22/23 cases passed(N/A)
+# Accepted
+# 23/23 cases passed(96 ms)
+# Your runtime beats 96.12 % of python3 submissions
+# Your memory usage beats 62.5 % of python3 submissions(20.5 MB)
