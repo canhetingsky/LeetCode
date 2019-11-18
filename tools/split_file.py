@@ -6,7 +6,7 @@ def file_create(file_name, txt):
     """
     write txt to a file
     :param file_name:the name of file
-    :param txt:中午收盘价
+    :param txt:text
     """
     with open(file_name, mode='w', encoding='utf-8') as f:
         f.write(txt)
