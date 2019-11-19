@@ -7,5 +7,7 @@
 [![GitHub top language](https://img.shields.io/github/languages/top/canhetingsky/LeetCode)](https://github.com/canhetingsky/LeetCode/search?l=python)
 [![GitHub license](https://img.shields.io/github/license/canhetingsky/LeetCode)](https://github.com/canhetingsky/LeetCode/blob/master/LICENSE)
 
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/canhetingsky/LeetCode)](https://github.com/canhetingsky/LeetCode/commits/)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/y/canhetingsky/LeetCode)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/canhetingsky/LeetCode)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/canhetingsky/LeetCode)](https://github.com/canhetingsky/LeetCode/commits/)
 ![GitHub last commit](https://img.shields.io/github/last-commit/canhetingsky/LeetCode)
