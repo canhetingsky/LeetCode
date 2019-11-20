@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # encoding: utf-8
+import os
 
 
 def file_create(file_name, txt):
@@ -8,14 +9,16 @@ def file_create(file_name, txt):
     :param file_name:the name of file
     :param txt:text
     """
-    with open(file_name, mode='w', encoding='utf-8') as f:
+    folder = '../Questions/'
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+    with open(os.path.join(folder, file_name), mode='w', encoding='utf-8') as f:
         f.write(txt)
 
 
 def main():
     file_name = ''
     txt = ''
-    nums = 0
     first = True
     with open('../Question.md', mode='r', encoding='utf-8') as f:
         for s in f.readlines():
@@ -25,8 +28,8 @@ def main():
                 else:
                     file_create(file_name + '.md', txt)
                     txt = ''
-                nums += 1
-                file_name = str(nums) + '.' + s.split('[')[1].split(']')[0]
+                nums = s.split('.')[0].split()[1]
+                file_name = nums + '.' + s.split('[')[1].split(']')[0]
                 print(file_name)
             txt += s
 
