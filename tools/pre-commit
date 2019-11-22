@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python tools/python_comment_count.py
