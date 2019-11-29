@@ -23,5 +23,7 @@ jobs:
         pip install -r requirements.txt
     - name: Python Code Comment Rate
       run: python ./tools/python_comment_count.py
+    - name: File Encoding Check
+      run: python ./tools/encoding_check.py --encoding='utf-8'
     - name: Check Markdown links
       uses: gaurav-nelson/github-action-markdown-link-check@0.4.0

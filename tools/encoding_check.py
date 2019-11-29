@@ -42,29 +42,37 @@ def convertFile(file, dst_encoding='utf-8', debug=True):
         if debug:
             info = showInfo(file, src_encoding, dst_encoding)
             print(info)
-        content = content.decode(src_encoding).encode(dst_encoding)  # 重新编码
-        codecs.open(file, 'wb').write(content)  # 按照目标编码写入文件
-        gitAddFile(file)
+        if dst_encoding:
+            content = content.decode(src_encoding).encode(dst_encoding)  # 重新编码
+            codecs.open(file, 'wb').write(content)  # 按照目标编码写入文件
+            gitAddFile(file)
 
 
-def convertPath(path):
+def convertPath(path, encoding='utf-8', debug=True):
     files = os.listdir(path)
     for file in files:
         sub_path = os.path.join(path, file)  # the relative path of the file
         if os.path.isfile(sub_path):
-            convertFile(sub_path)
+            convertFile(sub_path, dst_encoding=encoding, debug=debug)
         if os.path.isdir(sub_path):
             if(file[0] == '.'):  # 隐藏文件夹，不处理
                 pass
             else:
-                convertPath(sub_path)  # backtracking
+                convertPath(sub_path, encoding=encoding,
+                            debug=debug)  # backtracking
 
 
 def main(args):
-    path = args.path  # 要转换编码的文件夹
+    config = {
+        'path': args.path,  # 要转换编码的文件夹
+        'debug': args.debug,  # 是否显示每一个文件的编码转换结果
+        'encoding': args.encoding  # 文件编码
+    }
+    path = config.get('path')
     if os.path.isdir(path):
         print('encoding check:%s' % path)
-        convertPath(path)
+        convertPath(path, encoding=config.get(
+            'encoding'), debug=config.get('debug'))
     else:
         print('%s not found' % path)
 
@@ -74,5 +82,9 @@ if __name__ == "__main__":
         usage="it's usage tip.", description="help info.")
     parser.add_argument("--path", default='./',
                         help="the folder to process.", dest="path")
+    parser.add_argument("--debug", choices=[True, False], type=bool,
+                        default=True, help="whether to show each file convert result.", dest="debug")
+    parser.add_argument("--encoding", default='', type=str,
+                        help="file encoding.", dest="encoding")
     args = parser.parse_args()
     main(args)
