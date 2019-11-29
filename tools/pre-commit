@@ -1,3 +1,4 @@
 #!/bin/sh
 
+python tools/encoding_check.py
 python tools/python_comment_count.py
