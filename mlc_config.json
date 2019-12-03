@@ -1,7 +1,9 @@
 {
-    "ignorePatterns": [
-        {
+    "ignorePatterns": [{
             "pattern": "^https://leetcode.com"
+        },
+        {
+            "pattern": "^http://tldp.org"
         }
     ]
 }
